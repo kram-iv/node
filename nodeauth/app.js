@@ -6,13 +6,14 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var passport = require('passport');
-//const { check, validationResult } = require('express-validator');
 var LocalStrategy = require('passport-local').Strategy;
+//const { check, validationResult } = require('express-validator');
 var multer = require('multer');
 // Handle file uploads
 var upload = multer({dest:'./uploads'});
 
 var flash = require('connect-flash');
+var bcrypt = require('bcryptjs');
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var db = mongoose.connection;
@@ -44,6 +45,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Validator
+app.use(flash());
 app.use(require('connect-flash')());
 app.use(function (req, res, next) {
   res.locals.messages = require('express-messages')(req, res);

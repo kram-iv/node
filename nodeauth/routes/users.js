@@ -4,8 +4,10 @@ var router = express.Router();
 var multer = require('multer');
 // Handle file uploads
 var upload = multer({dest:'./uploads'});
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
-//var User = require('../models/User')
+var User = require('../models/User');
 
 const { check, validationResult } = require('express-validator');
 
@@ -22,6 +24,52 @@ router.get('/register', function(req, res, next) {
 router.get('/login', function(req, res, next) {
   res.render('login', { title: 'Login' });
 });
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.getUserbyId(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+
+router.post('/login',
+  passport.authenticate('local',{
+      failureRedirect:'/users/login', failureFlash:'Invalid username or password'}),
+  function(req, res) {
+    req.flash('success', 'You are now logged in');
+    res.redirect('/');
+    //res.redirect('/users/login');
+  });
+
+/*
+router.post('/login',
+passport.authenticate('local',{
+    failureRedirect:'/users/login', failureFlash:'Invalid username or password',
+    successRedirect:'/'})
+);
+*/
+
+passport.use (new LocalStrategy(function(username, password, done){
+  User.getUserByUsername(username, function(err,user){
+    if (err) throw err;
+    if(!user) {
+      return done(null, false,{message: 'Unkwown User'});
+    }
+    User.comparePassword(password, user.password, function(err, isMatch){
+      if(err) return done(err);
+      if(isMatch) {
+        console.log("Password match successful!!");
+        return done(null, user);
+      } else {
+        return done(null, false, {message: 'Invalid Password'});
+      }
+    });
+  });
+}));
 
 router.post('/register',upload.single('profileImage'),[
     check('name').isLength({ min: 3 }).withMessage('Name is required. Min 3 characters.') ,
@@ -60,6 +108,23 @@ router.post('/register',upload.single('profileImage'),[
   } else {
     console.log('No errors');
     console.log(errors);
+
+    var newUser = new User({
+      name: name,
+      email: email,
+      username: username,
+      password: password,
+      profileimage: profileimage
+    });
+
+    User.createUser(newUser, function(err, user){
+      if (err) throw err;
+      console.log(user);
+    });
+
+    req.flash('success','You\'re now registered and can login!');
+    res.location('/');
+    res.redirect('/');
   }
   //res.sendStatus(200);
 });

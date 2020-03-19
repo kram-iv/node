@@ -3,6 +3,7 @@ html(lang="en")
   head
     meta(charset="utf-8")
     link(href="/stylesheets/bootstrap.min.css" rel="stylesheet")
+    link(href="/stylesheets/style.css" rel="stylesheet")
   body
     header
       // Fixed navbar
@@ -25,6 +26,7 @@ html(lang="en")
     // Begin page content
     main.container(role="main")
       .container
+        !=messages()
         block content
     footer.footer
       .container
