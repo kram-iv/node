@@ -52,6 +52,13 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.get('*', function(req, res, next) {
+  // Here we create a global variable user to store logged in user.
+  // It can be accessed by the view..
+  res.locals.user = req.user || null;
+  next();
+});
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

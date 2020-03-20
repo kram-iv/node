@@ -30,28 +30,15 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  User.getUserbyId(id, function(err, user) {
+  User.getUserById(id, function(err, user) {
     done(err, user);
   });
 });
 
-
 router.post('/login',
   passport.authenticate('local',{
-      failureRedirect:'/users/login', failureFlash:'Invalid username or password'}),
-  function(req, res) {
-    req.flash('success', 'You are now logged in');
-    res.redirect('/');
-    //res.redirect('/users/login');
-  });
-
-/*
-router.post('/login',
-passport.authenticate('local',{
-    failureRedirect:'/users/login', failureFlash:'Invalid username or password',
-    successRedirect:'/'})
-);
-*/
+                failureRedirect:'/users/login', failureFlash:'Invalid username or password',
+                successRedirect:'/', successFlash:'You are now logged in'}));
 
 passport.use (new LocalStrategy(function(username, password, done){
   User.getUserByUsername(username, function(err,user){
@@ -98,8 +85,6 @@ router.post('/register',upload.single('profileImage'),[
     var profileimage = 'noimage.jpg';
   }
 
-  // Form Validator
-  //req.checkBody('name', 'Name field is required').notEmpty();
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.render('register', {"errors": errors.array()});
@@ -127,6 +112,12 @@ router.post('/register',upload.single('profileImage'),[
     res.redirect('/');
   }
   //res.sendStatus(200);
+});
+
+router.get('/logout', function(req, res){
+  req.logout();
+  req.flash('success', 'You are now logged out.');
+  res.redirect('/users/login');
 });
 
 module.exports = router;
