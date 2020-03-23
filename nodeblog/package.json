@@ -1,0 +1,28 @@
+{
+  "name": "nodeblog",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "canvas": "^2.6.1",
+    "ckeditor4": "^4.14.0",
+    "connect-flash": "*",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "express-messages": "*",
+    "express-session": "^1.17.0",
+    "express-validator": "*",
+    "http-errors": "~1.6.3",
+    "jquery": "^3.4.1",
+    "jsdom": "^16.2.1",
+    "moment": "*",
+    "mongodb": "*",
+    "monk": "*",
+    "morgan": "~1.9.1",
+    "multer": "*",
+    "pug": "2.0.0-beta11"
+  }
+}
