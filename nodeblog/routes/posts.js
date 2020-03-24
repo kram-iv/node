@@ -2,23 +2,21 @@ var express = require('express');
 var router = express.Router();
 var multer = require('multer');
 // Handle file uploads
-var upload = multer({dest:'./uploads'});
+var upload = multer({dest:'./public/images'});
 var db = require('monk')('localhost/nodeblog');
-
-var $ = require("jquery");/*
-require("jsdom").env("", function(err, window) {
-    if (err) {
-        console.error(err);
-        return;
-    }
-
-    var $ = require("jquery")(window);
-});*/
-//const ClassicEditor = require( '@ckeditor/ckeditor5-build-classic' );
 
 const { check, validationResult } = require('express-validator');
 
-/* GET postslisting. */
+router.get('/show/:id', function(req, res, next) {
+    var posts = db.get('posts');
+    posts.findOne( req.params.id, {}, function(err,post) {
+      res.render('show',{
+          'post': post
+      });
+    });
+  });
+
+/* GET posts listing. */
 router.get('/add', function(req, res, next) {
   var categories = db.get('categories');
   categories.find( {}, {}, function(err,categories) {
@@ -26,16 +24,6 @@ router.get('/add', function(req, res, next) {
         'title': 'Add post',
         'categories': categories
     });
-/*
-    ClassicEditor
-    .create( document.querySelector( '#body' ) )
-    .then( editor => {
-        console.log( editor );
-    })
-    .catch( error => {
-        console.error( error );
-    });
-*/
   });
 });
 
@@ -86,5 +74,56 @@ router.post('/add', upload.single('mainimage'),[
 
 });
 
+router.post('/addcomment', [
+    check('name').isLength({ min: 3 }).withMessage('Name is required. Min 3 characters.'),
+    check('email').isEmail().withMessage('Valid email is required.'),
+    check('body').isLength({ min: 3 }).withMessage('Body is required. Min 3 characters.') ,
+    ], function(req, res, next) {
+    // Get form values
+    var name   = req.body.name;
+    var email  = req.body.email;
+    var body   = req.body.body;
+    var postid = req.body.postid;
+    var commentdate = new Date();
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      var posts = db.get('posts');
+      posts.findOne(postid, function(err,post){
+        res.render('show', {
+            "errors": errors.array(),
+            "post": post
+        });
+      });
+
+      console.log("Errors");
+      console.log({"errors": errors.array()});
+    } else {
+      var comment = {
+        "name": name,
+        "email": email,
+        "body": body,
+        "commentdate": commentdate
+      };
+      var posts = db.get('posts');
+
+      posts.update({
+          "_id": postid
+        },{
+          $push: {
+                "comments": comment
+            }
+        }, function(err,doc) {
+            if(err) {
+                throw err;
+            } else {
+                req.flash('success', 'Comment Added');
+                res.location('/posts/show/' + postid);
+                res.redirect('/posts/show/' + postid);
+            }
+        });
+    }
+
+});
 
 module.exports = router;

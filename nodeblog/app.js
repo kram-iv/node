@@ -23,11 +23,15 @@ db.then(() => {
 
 var indexRouter = require('./routes/index');
 var postsRouter = require('./routes/posts');
+var categoriesRouter = require('./routes/categories');
 
 var app = express();
 
 app.locals.moment = require('moment');
-
+app.locals.truncateText = function(text,length) {
+  var truncatedText = text.substring(0, length);
+  return truncatedText;
+}
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -62,6 +66,7 @@ app.use (function(req,res,next) {
 
 app.use('/', indexRouter);
 app.use('/posts', postsRouter);
+app.use('/categories', categoriesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

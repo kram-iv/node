@@ -14,10 +14,11 @@ block content
 			label Category
 			select.form-control(name='category')
 				each category in categories
-					option(value='#{category.name}') #{category.name}
+					- var value = category.name
+					option(value=value) #{category.name}
 		.form-group
 			label Body
-			#editor
+			textarea.form-control(name='body', id='editor')
 			br
 		.form-group
 			label Main Image:

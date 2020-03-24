@@ -1,0 +1,45 @@
+extends layout
+
+block content
+  - var post_image    = post.mainimage
+  - var post_category = post.category
+  - var post_title    = post.title
+  - var post_id       = post._id
+  - var post_comments = post.comments
+  .post
+    h1= post_title
+    p.meta
+      | Posted in
+      |
+      a(href='/categories/show/'+post_category) #{post.category}
+      |  by #{post.author}
+      | on #{moment(post.date).format("MM-DD-YYYY")}
+    img(src='/images/'+post_image)
+    !=post.body
+    br
+    hr
+    if post_comments
+      h3 comments
+      each comment in post_comments
+        .comment
+          p.comment-name #{comment.name}
+          p.comment-body #{comment.body}
+    br
+    h3 Add comment
+    if errors
+      ul.errors
+        each error in errors
+          li.alert.alert-danger #{error.msg}
+    form.comment-form(method='post',action='/posts/addcomment')
+      input(name='postid', type='hidden', value=post_id)
+      .form-group
+        label Name
+        input.form-control(type='text', name='name')
+      .form-group
+        label Email
+        input.form-control(type='email', name='email')
+      .form-group
+        label Body
+        textarea.form-control(type='text', name='body')
+      br
+      input.btn.btn-default(type='submit', name='submit', value='Add Comment')

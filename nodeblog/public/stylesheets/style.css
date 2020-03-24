@@ -93,6 +93,10 @@ a.more{
 	text-decoration: none;
 }
 
+.post img{
+	width:100%;
+}
+
 input, select, textarea{
 	margin-bottom:15px;
 }

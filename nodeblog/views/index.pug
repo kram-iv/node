@@ -3,9 +3,18 @@ extends layout
 block content
   if posts
     each post in posts
+      - var post_id = post._id
+      - var post_image = post.mainimage
+      - var post_category = post.category
       .post
         h1
-          a(href='/posts/show/#{post._id}')= post.title
-        p.meta Posted in #{post.category} by #{post.author} on #{moment(post.date).format("MM-DD-YYYY")}
-        =post.body
-        a.more(href='/posts/show/#{post._id}') Read More
+          a(href='/posts/show/'+ post_id)= post.title
+        p.meta
+          | Posted in
+          |
+          a(href='/categories/show/'+post_category) #{post.category}
+          |  by #{post.author}
+          | on #{moment(post.date).format("MM-DD-YYYY")}
+        img(src='/images/'+post_image)
+        !=truncateText(post.body,400)
+        a.more(href='/posts/show/' + post_id) Read More
