@@ -28,15 +28,26 @@ router.get('/add', function(req, res, next) {
 });
 
 router.post('/add', upload.single('mainimage'),[
-    check('title').isLength({ min: 3 }).withMessage('Title is required. Min 3 characters.') ,
-    check('body').isLength({ min: 3 }).withMessage('Body is required.')
+    check('title').isLength({ min: 3 }).withMessage('Title is required. Min 3 characters.'),
+    check('body').isLength({ min: 3 }).withMessage('Body is required.'),
+    check('category').isLength({ min: 3 }).withMessage('Body is required.')
     ], function(req, res, next) {
-    // Gete form values
+    // Get form values
     var title = req.body.title;
     var category = req.body.category;
     var body = req.body.body;
     var author = req.body.author;
     var date = new Date();
+    var _csrf = req.body._csrf;
+
+    console.log("title ");
+    console.log(title);
+
+    console.log("category ");
+    console.log(category);
+
+    console.log("csrf ");
+    console.log(_csrf);
 
     if(req.file) {
         var mainimage = req.file.filename;
@@ -46,7 +57,14 @@ router.post('/add', upload.single('mainimage'),[
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.render('addpost', {"errors": errors.array()});
+      var categories = db.get('categories');
+      categories.find( {}, {}, function(err,categories) {
+        res.render('addpost',{
+            'title': 'Add post',
+            'categories': categories,
+            "errors": errors.array()
+        });
+      });
       console.log("Errors");
       console.log({"errors": errors.array()});
     } else {

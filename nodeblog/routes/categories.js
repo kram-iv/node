@@ -31,7 +31,7 @@ router.post('/add', [
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.render('addcategories', {"errors": errors.array()});
+      res.render('addcategory', {"errors": errors.array()});
       console.log("Errors");
       console.log({"errors": errors.array()});
     } else {

@@ -27,7 +27,7 @@ block content
     br
     h3 Add comment
     if errors
-      ul.errors
+      ul.error
         each error in errors
           li.alert.alert-danger #{error.msg}
     form.comment-form(method='post',action='/posts/addcomment')

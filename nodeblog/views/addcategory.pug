@@ -2,7 +2,7 @@ extends layout
 
 block content
     h1=title
-    ul.errors
+    ul.error
         if errors
             each error in errors
                 li.alert.alert.danger #{error.msg}
@@ -10,4 +10,5 @@ block content
         .form-group
             label Name:
             input.form-control(name='name', type='text')
-        input.btn.btn-default(name='submit',type='submit',value='Add')
+        input.btn.btn-default(name='submit',type='submit',value='Add', required)
+        input(type='hidden' name='_csrf' value=token)
