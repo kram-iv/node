@@ -1,0 +1,25 @@
+{>"layouts/master" /}
+
+{<body}
+    <div class="grid-x grid-padding-x">
+        <div class="large-12 cell">
+            <div class="grid-x grid-padding-x">
+                <div class="large-4 medium-4 cell book">
+                    <img src="/img/{book.cover}" alt="">
+                </div>
+
+                <div class="large-8 medium-8 cell book">
+                    <h2>{book.title}</h2>
+                    <ul class="bookInfo">
+                        <li>Category: {book.category}</li>
+                        <li>Author: {book.author}</li>
+                        <li>Publisher: {book.publisher}</li>
+                    </ul>
+                    <br>
+                    <div class="price"><span>{book.price}</span></div>
+                    <p>{book.description}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{/body}

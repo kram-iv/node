@@ -1,0 +1,19 @@
+{>"layouts/master" /}
+
+{<body}
+    <div class="grid-x grid-padding-x">
+        <div class="large-12 cell">
+            <div class="grid-x grid-padding-x">
+            {#books}
+                <div class="large-3 medium-3 cell book end">
+                    <img src="/img/{.cover}" alt="">
+                    <h4>{.title}</h4>
+                    <p>{.truncText}</p>
+                    <div class="price">Buy it for <span>{.price}</span></div>
+                    <a href="/books/details/{._id}" class="button small">Book Details</a>
+                </div>
+            {/books}
+            </div>
+        </div>
+    </div>
+{/body}

@@ -1,0 +1,19 @@
+<select name="category">
+    {#categories}
+        {@contextDump/}
+        {@eq key=book.category value="Node.js"}
+            <!-- <option value="{.name}" selected>{.name}</option> -->
+            <p>Category is Node.js</p>
+        {:else}
+            <!-- <option value="{.name}">{.name}</option> -->
+            <p>Category is something else</p>
+        {/eq}
+        <!-- <option value="{.name}">{.name}</option> -->
+    {/categories}
+    </select>
+
+    <select name="category">
+        {#categories}
+            <option value="{.name}">{.name}</option>
+        {/categories}
+    </select>
